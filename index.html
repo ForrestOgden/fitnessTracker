@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <nav>
+            <button onclick="showPage('home')">Home</button>
+            <button onclick="showPage('log')">Log Workout</button>
+            <button onclick="showPage('progress')">Progress</button>
+        </nav>
+
+        <div id="home" class="page active">
+    <h1>Fitness Tracker</h1>
+    <p>Welcome to your fitness tracker! Navigate to log workouts or view progress.</p>
+    <canvas id="bodyWeightChart" width="400" height="200" style="margin-bottom: 20px;"></canvas> <!-- Body weight chart at the top -->
+    <canvas id="workoutChart" width="400" height="200"></canvas>
+</div>
+
+
+        <div id="log" class="page">
+            <h1>Log Workout</h1>
+            <form id="workout-form">
+                <button type="button" id="select-exercise" onclick="showExerciseModal()">Select Exercise</button>
+                <input type="text" id="body-weight" placeholder="Body Weight (lbs)" />
+                <input type="text" id="sets" placeholder="Sets" />
+                <input type="text" id="reps" placeholder="Reps" />
+                <input type="text" id="weight" placeholder="Weight (lbs)" />
+                <button type="submit" id="log-workout-button">Log Workout</button>
+            </form>
+            <div id="success-popup" style="display:none;">Workout logged successfully!</div>
+        </div>
+
+        <div id="progress" class="page">
+            <h1>Progress</h1>
+            <ul id="workout-list"></ul>
+        </div>
+
+        <div id="exercise-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeExerciseModal()">&times;</span>
+                <h2>Select Exercise</h2>
+                <div id="exercise-buttons"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

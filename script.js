@@ -54,26 +54,47 @@ function getCategoryColor(category) {
     return colors[category] || '#FFFFFF'; // Default to white if category is not found
 }
 
-
-// Load initial data for charts and progress
 function loadInitialData() {
-    // Load and render body weight data
-    bodyWeightData.forEach(entry => {
-        const date = entry.date; // Adjust as needed based on how you're saving
-        const weight = entry.weight;
-        // Push to chart data and render it
-    });
-    
-    // Load and render lift data
+    // Load body weight data
+    bodyWeightData = JSON.parse(localStorage.getItem('bodyWeightData')) || [];
+
+    // Load lift data
+    liftData = JSON.parse(localStorage.getItem('liftData')) || {};
+
+    // Filter out any deleted or irrelevant entries
     for (const exercise in liftData) {
-        liftData[exercise].forEach(entry => {
-            // Push to chart data and render it
+        liftData[exercise] = liftData[exercise].filter(entry => {
+            // Add logic here to determine if the entry should be kept
+            // Assuming you want to keep all existing entries unless specified otherwise
+            return entry && entry.date && entry.weight; // Ensure entry has the necessary fields
         });
     }
 
+    // Clear any empty arrays to avoid unnecessary charts
+    for (const exercise in liftData) {
+        if (liftData[exercise].length === 0) {
+            delete liftData[exercise]; // Remove the exercise if no logs are left
+        }
+    }
+
+    // Save the cleaned liftData back to localStorage
+    localStorage.setItem('liftData', JSON.stringify(liftData));
+
+    // Load and render body weight data into the chart
     updateBodyWeightChart(); 
+
+    // Load and render lift data for each exercise
+    for (const exercise in liftData) {
+        updateLiftChartsSection(exercise);
+    }
+
+    // Update the progress list to display current entries
     updateProgressList(); 
 }
+
+// Call loadInitialData on page load
+window.onload = loadInitialData;
+
 
 // Call loadInitialData on page load
 window.onload = loadInitialData;
@@ -114,20 +135,18 @@ function updateBodyWeightChart() {
 function updateLiftChartsSection(exercise) {
     const data = getExerciseData(exercise); // Fetch the current exercise data
 
-    // Check if the chart already exists
     if (charts[exercise]) {
         // Update existing chart with new data
-        charts[exercise].data.labels = data.labels; // Update labels (dates)
-        charts[exercise].data.datasets[0].data = data.values; // Update weight data
-        charts[exercise].update(); // Refresh the chart
+        charts[exercise].data.labels = data.labels; 
+        charts[exercise].data.datasets[0].data = data.values; 
+        charts[exercise].update(); 
     } else {
-        // Create a new canvas for the exercise chart
+        // Create a new canvas for the exercise chart if it doesn't exist
         const canvas = document.createElement('canvas');
         canvas.id = `${exercise}-chart`;
         canvas.width = 400;
         canvas.height = 200;
 
-        // Append the new chart to the exercise-charts section
         const exerciseChartsDiv = document.getElementById('exercise-charts');
         exerciseChartsDiv.appendChild(canvas);
 
@@ -156,6 +175,7 @@ function updateLiftChartsSection(exercise) {
         });
     }
 }
+
 
 function deleteLog(exercise, logId) {
     // Code to delete the log from your database or data structure

@@ -107,21 +107,21 @@ button.home {
     background-color: #4b8e7f;
     font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
     font-size: 12px;
-text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 }
 
 button.log {
     background-color: #c05bb6;
     font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
     font-size: 12px;
-text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 }
 
 button.prog {
     background-color: #0fb2eb;
     font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
     font-size: 12px;
-text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 }
 
 button:hover {
@@ -191,7 +191,7 @@ button {
 }
 
 button.delete {
-    background-color: #641eb0; /* Red color for delete buttons */
+    background-color: #7142FF; /* Red color for delete buttons */
     font-size: 16px; /* Smaller font size */
     padding: 3px 8px; /* Smaller padding */
     font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
@@ -260,10 +260,12 @@ button:hover {
 
 #select-exercise {
  background: #7142FF;
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 }
 
 #log-workout-button {
  background: #007FFF;
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 }
 
 
@@ -326,6 +328,7 @@ button:hover {
     cursor: pointer;
     transition: all 0.3s ease;
     height: 50px;
+text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
 
 }
 

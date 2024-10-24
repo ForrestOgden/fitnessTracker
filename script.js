@@ -1,7 +1,125 @@
 let bodyWeightData = JSON.parse(localStorage.getItem('bodyWeightData')) || [];
-let liftData = JSON.parse(localStorage.getItem('liftData')) || {};
+
+let liftData = JSON.parse(localStorage.getItem('liftData')) || {}; // Load existing liftData or create an empty object
+
 let bodyWeightChart;
 let charts = {};
+
+const cyberpunkColors = [
+    '#00ffff', // cyan
+    '#ff00ff', // magenta
+    '#00ff00', // neon green
+    '#ff4c4c', // neon red
+    '#ffcc00', // yellow
+    '#9932cc', // purple
+    '#00ced1', // dark cyan
+    '#ff4500', // orange-red
+    '#4682b4', // steel blue
+    '#ff1493', // deep pink
+    '#32cd32', // lime green
+];
+
+function saveChartConfig(exercise, color) {
+    // Get the existing chart configurations from localStorage or create a new object
+    const storedConfig = JSON.parse(localStorage.getItem('chartConfig')) || {};
+
+    // Store the color for the specific exercise
+    storedConfig[exercise] = color;
+
+    // Save the updated configuration back to localStorage
+    localStorage.setItem('chartConfig', JSON.stringify(storedConfig));
+}
+
+function getRandomCyberpunkColor(exercise) {
+    // Ensure exercise has a color assigned
+    if (!liftData[exercise]) {
+        liftData[exercise] = {}; // Initialize if it doesn't exist
+    }
+
+    if (!liftData[exercise].color) {
+        const randomColor = cyberpunkColors[Math.floor(Math.random() * cyberpunkColors.length)];
+        liftData[exercise].color = randomColor; // Assign a random color
+        localStorage.setItem('liftData', JSON.stringify(liftData)); // Save the updated liftData
+    }
+
+    return liftData[exercise].color; // Return the assigned color
+}
+
+
+
+
+function loadChartConfig(exercise) {
+    const storedConfig = JSON.parse(localStorage.getItem('chartConfig'));
+    if (storedConfig && storedConfig[exercise]) {
+        return storedConfig[exercise];
+    }
+    return null; // Return null if no color is stored for this exercise
+}
+
+
+
+function updateLiftChartsSection(exercise) {
+    const data = getExerciseData(exercise); // Fetch the current exercise data
+
+    // Check if the chart already exists
+    if (charts[exercise]) {
+        // Update existing chart with new data
+        charts[exercise].data.labels = data.labels; // Update labels (dates)
+        charts[exercise].data.datasets[0].data = data.values; // Update weight data
+        charts[exercise].update(); // Refresh the chart
+    } else {
+        // Create a new canvas for the exercise chart
+        const canvas = document.createElement('canvas');
+        canvas.id = `${exercise}-chart`;
+        canvas.width = 400;
+        canvas.height = 200;
+
+        const exerciseChartsDiv = document.getElementById('exercise-charts');
+        exerciseChartsDiv.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        let color = loadChartConfig(exercise); // Try to load the stored color
+
+        // If no color is found, get a new random one
+        if (!color) {
+            color = getRandomCyberpunkColor(exercise);
+        }
+
+        charts[exercise] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: exercise,
+                    data: data.values,
+                    borderColor: color,
+                    backgroundColor: `${color}20`, // Lighter color with transparency
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Save the chart configuration to localStorage
+        saveChartConfig(exercise, color);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 // Function to log body weight and exercises
 document.getElementById('workout-form').onsubmit = function(event) {
@@ -132,49 +250,6 @@ function updateBodyWeightChart() {
     });
 }
 
-function updateLiftChartsSection(exercise) {
-    const data = getExerciseData(exercise); // Fetch the current exercise data
-
-    if (charts[exercise]) {
-        // Update existing chart with new data
-        charts[exercise].data.labels = data.labels; 
-        charts[exercise].data.datasets[0].data = data.values; 
-        charts[exercise].update(); 
-    } else {
-        // Create a new canvas for the exercise chart if it doesn't exist
-        const canvas = document.createElement('canvas');
-        canvas.id = `${exercise}-chart`;
-        canvas.width = 400;
-        canvas.height = 200;
-
-        const exerciseChartsDiv = document.getElementById('exercise-charts');
-        exerciseChartsDiv.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-
-        // Initialize the chart
-        charts[exercise] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: exercise,
-                    data: data.values,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-}
 
 
 function deleteLog(exercise, logId) {

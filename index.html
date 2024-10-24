@@ -5,28 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitness Tracker</title>
     <link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+
 </head>
 <body>
     <div id="app">
         <nav>
-            <button onclick="showPage('home')">Home</button>
-            <button onclick="showPage('log')">Log Workout</button>
-            <button onclick="showPage('progress')">Progress</button>
+            <button class='home' onclick="showPage('home')">Home</button>
+            <button class='log' onclick="showPage('log')">Log Workout</button>
+            <button class='prog' onclick="showPage('progress')">Progress</button>
         </nav>
 
+
         <div id="home" class="page active">
-            <h1>Fitness Tracker
+            <h1 class="main-title">MuscleBound
+		        <div>
+
+
+            <img src="muscles.png" alt="Refresh Icon" style="width: 50px; height: 50px;">
+        </div>
+	    </h1>
+            <p>Welcome to MuscleBound - your personal fitness tracker! On the home page, you can view your body weight changes and track each lift that you do! After logging your lift, check back here to view it on a chart that will keep track for you! Navigate using the tabs to log workouts, view progress notes.</p>
+
+	<div class="refresh-container">
+	<h3>Refresh charts</h3>
 		        <button id="refresh-button" title="Refresh" onclick="refreshPage()" style="margin-left: 10px; cursor: pointer;">
             <img src="refresh.jpg" alt="Refresh Icon" style="width: 20px; height: 20px;">
         </button>
-	    </h1>
-            <p>Welcome to MuscleBound! On the home page, you can view your body weight changes and track each lift that you do! After logging your lift, check back here to view it on a chart that will keep track for you! Navigate using the tabs to log workouts, view progress notes.</p>
+	</div>
+
             <canvas id="bodyWeightChart" width="400" height="200" style="margin-bottom: 20px;"></canvas> <!-- Body weight chart at the top -->
             <div id="exercise-charts"></div> <!-- Section for exercise charts -->
         </div>
 
+
         <div id="log" class="page">
-            <h1>Log Workout</h1>
+            <h1 class='log-header'>Log Workout</h1>
             <form id="workout-form">
                 <button type="button" id="select-exercise" onclick="showExerciseModal()">Select Exercise</button>
                 <input type="text" id="body-weight" placeholder="Body Weight (lbs)" />

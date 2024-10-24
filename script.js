@@ -225,7 +225,7 @@ function updateProgressList() {
             const li = document.createElement('li');
             li.style.display = 'flex'; // Use flexbox for alignment
             li.style.justifyContent = 'space-between'; // Space between text and button
-            li.textContent = `Date: ${entry.date}, Exercise: ${exercise}, Sets: ${entry.sets}, Reps: ${entry.reps}, Weight: ${entry.weight} lbs `;
+            li.textContent = `Date: ${entry.date},  Exercise: ${exercise}, Sets: ${entry.sets}, Reps: ${entry.reps}, Weight: ${entry.weight} lbs `;
             
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';

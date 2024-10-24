@@ -1,15 +1,52 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
+    background-color: #0d0d0d; /* Dark background */
+    color: #f0f0f0; /* Light text color */
+    font-family: 'Orbitron', sans-serif; /* Futuristic font */
     margin: 0;
     padding: 20px;
 }
 
 nav {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+display: flex;
+    margin: 20px;
+    max-width: 100vw;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.main-title {
+	font-size: 40px;
+}
+
+.log-header {
+  margin-bottom: 15px;
+}
+
+#workout-list li {
+    background-color: #1a1a1a; /* Dark card background */
+    border: 2px solid #ff00ff; /* Neon pink border */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    font-size: 1.2rem;
+    color: #00e6e6; /* Neon cyan text */
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.7), 0 0 15px rgba(0, 230, 230, 0.7);
+    transition: transform 0.3s ease-in-out;
+}
+
+li {
+display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Hover effect for the notes */
+#workout-list li:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 0 0 25px rgba(255, 0, 255, 1), 0 0 25px rgba(0, 230, 230, 1);
 }
 
 .page {
@@ -30,9 +67,18 @@ h1 {
     font-size: 36px;
 }
 
+#workout-list {
+	font-size: 20px;
+	flex-direction: column;
+}
+
 p {
 	text-align: center;
         margin-bottom: 25px;
+        background: #38090e;
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid white;
 }
 
 
@@ -40,9 +86,15 @@ input, button {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    font-size: 20px; /* Set font size to 20px */
+    font-size: 14px; /* Set font size to 20px */
     border: 2px solid #444;
     border-radius: 5px;
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
+}
+
+.refresh-container {
+	display:flex;
+        justify-content: center;
 }
 
 button {
@@ -51,13 +103,40 @@ button {
     cursor: pointer;
 }
 
+button.home {
+    background-color: #4b8e7f;
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
+    font-size: 12px;
+text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+button.log {
+    background-color: #c05bb6;
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
+    font-size: 12px;
+text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+button.prog {
+    background-color: #0fb2eb;
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
+    font-size: 12px;
+text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
 button:hover {
     background-color: #555;
 }
 
+#workout-list {
+    display: flex;
+    width: auto;
+    padding: inherit;
+}
+
 #success-popup {
     position: fixed;
-    bottom: 20px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #4caf50;
@@ -65,6 +144,7 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     display: none;
+    text-align: center;
 }
 
 .modal {
@@ -111,9 +191,10 @@ button {
 }
 
 button.delete {
-    background-color: #f44336; /* Red color for delete buttons */
-    font-size: 14px; /* Smaller font size */
+    background-color: #641eb0; /* Red color for delete buttons */
+    font-size: 16px; /* Smaller font size */
     padding: 3px 8px; /* Smaller padding */
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
 }
 
 button.delete:hover {
@@ -170,6 +251,22 @@ button:hover {
     box-sizing: border-box; /* Include padding and borders in element's total width and height */
 }
 
+#workout-form {
+	    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#select-exercise {
+ background: #7142FF;
+}
+
+#log-workout-button {
+ background: #007FFF;
+}
+
+
 /* Modal styling */
 .modal-content {
     background-color: #222;
@@ -187,6 +284,15 @@ button:hover {
     font-size: 30px; /* Set font size to 20px */
     color: #ffffff; /* Optional: Set color for better visibility */
     margin: 10px 0; /* Optional: Add some margin for spacing */
+    font-family: 'Press Start 2P', cursive; /* Apply the pixel font */
+    text-shadow: 
+        0 0 5px #00e6e6,   /* Cyan outer glow */
+        0 0 10px #00e6e6, 
+        0 0 10px #ff00ff,  /* Pink glow beneath cyan */
+        0 0 10px #ff00ff, 
+        0 0 15px #ff00ff, 
+        0 0 15px #ff00ff; /* Stronger pink outer glow */
+
 }
 
 #refresh-button {
@@ -206,4 +312,38 @@ button:hover {
 
 #refresh-button:hover img {
     transform: rotate(360deg); /* Enlarges icon on hover */
+}
+
+
+/* Styling the delete button */
+.delete {
+    background-color: #641eb0;
+    border: 2px solid #00ff00; /* Neon green border */
+    color: white; /* Bright pink text */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'VT323', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 50px;
+
+}
+
+/* Delete button hover effect */
+.delete:hover {
+    background-color: #00ff00;
+    color: #0d0d0d;
+    transform: scale(1.1);
+}
+
+
+#bodyWeightChart {
+  border: dotted 2px white;
+  font-size: 12px;
+  
+}
+
+#exercise-charts canvas {
+  border: solid 2px #0000FF;
+  font-size: 12px;
 }

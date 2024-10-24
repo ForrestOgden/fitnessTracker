@@ -22,7 +22,19 @@ nav {
 
 h1 {
     text-align: center;
+    min-width: 100%;
+    display: flex; 
+	justify-content: space-around; 
+	align-items: center;
+    margin: 0; /* Remove default margin */
+    font-size: 36px;
 }
+
+p {
+	text-align: center;
+        margin-bottom: 25px;
+}
+
 
 input, button {
     width: 100%;
@@ -177,3 +189,21 @@ button:hover {
     margin: 10px 0; /* Optional: Add some margin for spacing */
 }
 
+#refresh-button {
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Ensure the cursor indicates it's clickable */
+    padding: 0; /* Remove padding for better alignment */
+    vertical-align: middle; /* Align button with text vertically */
+    width: 40px;
+}
+
+#refresh-button img {
+    transition: transform 1s; /* Adds a hover effect */
+    min-width: 40px;
+    min-height: 40px;
+}
+
+#refresh-button:hover img {
+    transform: rotate(360deg); /* Enlarges icon on hover */
+}

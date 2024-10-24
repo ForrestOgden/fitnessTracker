@@ -15,8 +15,12 @@
         </nav>
 
         <div id="home" class="page active">
-            <h1>Fitness Tracker</h1>
-            <p>Welcome to your fitness tracker! Navigate to log workouts or view progress.</p>
+            <h1>Fitness Tracker
+		        <button id="refresh-button" title="Refresh" onclick="refreshPage()" style="margin-left: 10px; cursor: pointer;">
+            <img src="refresh.jpg" alt="Refresh Icon" style="width: 20px; height: 20px;">
+        </button>
+	    </h1>
+            <p>Welcome to MuscleBound! On the home page, you can view your body weight changes and track each lift that you do! After logging your lift, check back here to view it on a chart that will keep track for you! Navigate using the tabs to log workouts, view progress notes.</p>
             <canvas id="bodyWeightChart" width="400" height="200" style="margin-bottom: 20px;"></canvas> <!-- Body weight chart at the top -->
             <div id="exercise-charts"></div> <!-- Section for exercise charts -->
         </div>

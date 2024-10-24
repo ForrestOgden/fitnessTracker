@@ -350,11 +350,9 @@ function addLog(exercise, logData) {
     createOrUpdateChart(exercise); // Call to update or create the chart after adding log
 }
 
-
-
-
-
-
+function refreshPage() {
+    location.reload(); // This reloads the current page
+}
 
 // Initialize default view
 showPage('home');

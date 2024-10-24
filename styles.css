@@ -108,3 +108,72 @@ button.delete:hover {
     background-color: #e53935; /* Darker red on hover */
 }
 
+/* Cyberpunk-inspired colors for each category */
+button.chest {
+    background-color: #ff007f; /* Neon pink */
+    color: #fff;
+}
+
+button.shoulders {
+    background-color: #00ffff; /* Vibrant cyan */
+    color: #fff;
+}
+
+button.back {
+    background-color: #00aaff; /* Electric blue */
+    color: #fff;
+}
+
+button.arms {
+    background-color: #ffd700; /* Bright yellow */
+    color: #000;
+}
+
+button.legs {
+    background-color: #32ff32; /* Neon green */
+    color: #000;
+}
+
+button.cardio {
+    background-color: #ff6600; /* Vivid orange */
+    color: #fff;
+}
+
+button.core {
+    background-color: #a020f0; /* Glowing purple */
+    color: #fff;
+}
+
+/* Button hover effects for a more cyberpunk vibe */
+button:hover {
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+/* Form input spacing */
+#workout-form input, #workout-form button {
+    margin: 15px 0; /* Add spacing between inputs */
+    padding: 10px;
+    width: calc(100% - 20px); /* Prevent inputs from touching the edges */
+    box-sizing: border-box; /* Include padding and borders in element's total width and height */
+}
+
+/* Modal styling */
+.modal-content {
+    background-color: #222;
+    border: 2px solid #555;
+    border-radius: 10px;
+}
+
+/* Spacing for the modal content */
+.modal-content div {
+    margin-bottom: 15px;
+}
+
+
+.category-title {
+    font-size: 30px; /* Set font size to 20px */
+    color: #ffffff; /* Optional: Set color for better visibility */
+    margin: 10px 0; /* Optional: Add some margin for spacing */
+}
+

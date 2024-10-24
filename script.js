@@ -41,6 +41,20 @@ document.getElementById('workout-form').onsubmit = function(event) {
 };
 
 
+function getCategoryColor(category) {
+    const colors = {
+        'Chest': '#FF4C4C',      // Red
+        'Shoulders': '#FF8C00',  // Orange
+        'Back': '#1E90FF',       // Dodger Blue
+        'Arms': '#9370DB',       // Medium Purple
+        'Legs': '#32CD32',       // Lime Green
+        'Cardio': '#FFD700',     // Gold
+        'Core': '#FF69B4'        // Hot Pink
+    };
+    return colors[category] || '#FFFFFF'; // Default to white if category is not found
+}
+
+
 // Load initial data for charts and progress
 function loadInitialData() {
     // Load and render body weight data
@@ -98,56 +112,36 @@ function updateBodyWeightChart() {
 }
 
 function updateLiftChartsSection(exercise) {
-    const liftChartsDiv = document.getElementById('progress');
+    // Create a canvas for the new exercise chart
+    const canvas = document.createElement('canvas');
+    canvas.id = `${exercise}-chart`;
+    canvas.width = 400;
+    canvas.height = 200;
     
-    if (!charts[exercise]) {
-        charts[exercise] = {
-            chart: null,
-            data: []
-        };
-    }
+    // Append the new chart to the exercise-charts section
+    const exerciseChartsDiv = document.getElementById('exercise-charts');
+    exerciseChartsDiv.appendChild(canvas);
 
-    const exerciseData = liftData[exercise].map(log => ({
-        date: log.date,
-        weight: parseFloat(log.weight)
-    }));
+    // Get data and create the chart
+    const data = getExerciseData(exercise); // Replace this with your function to get exercise data
+    const ctx = canvas.getContext('2d');
 
-    charts[exercise].data = exerciseData;
-
-    const chartId = `chart-${exercise}`;
-    let chartCanvas = liftChartsDiv.querySelector(`#${chartId}`);
-    
-    if (!chartCanvas) {
-        chartCanvas = document.createElement('canvas');
-        chartCanvas.id = chartId;
-        chartCanvas.width = 400;
-        chartCanvas.height = 200;
-        liftChartsDiv.appendChild(chartCanvas);
-    }
-
-    const ctx = chartCanvas.getContext('2d');
-
-    if (charts[exercise].chart) {
-        charts[exercise].chart.destroy();
-    }
-
-    charts[exercise].chart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: exerciseData.map(data => data.date),
+            labels: data.labels,
             datasets: [{
                 label: exercise,
-                data: exerciseData.map(data => data.weight),
-                borderColor: 'green',
-                backgroundColor: 'rgba(0, 255, 0, 0.5)',
-                fill: true,
+                data: data.values,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
             }]
         },
         options: {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: true
                 }
             }
         }
@@ -212,6 +206,7 @@ function showExerciseModal() {
     exerciseButtons.innerHTML = ''; // Clear previous buttons
     const exercises = {
         'Chest': ['Dumbbell Bench Press', 'Barbell Bench Press', 'Incline Dumbbell Bench Press', 'Incline Barbell Bench Press', 'Pec-Deck Flies'],
+        'Shoulders': ['Dumbbell Lateral Raises', 'Cable Lateral Raises', 'Dumbbell Shoulder Press', 'Rear Delt Flies (Machine)', 'Rear Delt Flies (Dumbbell)'],
         'Back': ['Pull-Ups', 'Chin Ups', 'Lat Pull Downs', 'Cable Rows', 'Deadlift'],
         'Arms': ['Tricep Push-Downs', 'Overhead Tricep Extensions', 'Bicep Curls', 'Hammer Curls'],
         'Legs': ['Leg Press', 'Barbell Squat', 'Calf Raises'],
@@ -221,12 +216,16 @@ function showExerciseModal() {
 
     for (const category in exercises) {
         const categoryDiv = document.createElement('div');
-        categoryDiv.innerHTML = `<h3>${category}</h3>`;
+        const categoryTitle = document.createElement('h3');
+        categoryTitle.className = 'category-title'; // Apply the class for styling
+        categoryTitle.textContent = category;
+        categoryDiv.appendChild(categoryTitle);
         
         exercises[category].forEach(exercise => {
             const button = document.createElement('button');
             button.textContent = exercise;
-            button.onclick = () => selectExercise(exercise);
+            button.style.backgroundColor = getCategoryColor(category); // Set the button color
+            button.onclick = () => selectExercise(exercise, category); // Pass category to selectExercise
             categoryDiv.appendChild(button);
         });
 
@@ -234,14 +233,120 @@ function showExerciseModal() {
     }
 }
 
+
+const exercises = {
+    'Chest': ['Dumbbell Bench Press', 'Barbell Bench Press', 'Incline Dumbbell Bench Press', 'Incline Barbell Bench Press', 'Pec-Deck Flies'],
+    'Shoulders': ['Dumbbell Lateral Raises', 'Cable Lateral Raises', 'Dumbbell Shoulder Press', 'Rear Delt Flies (Machine)', 'Rear Delt Flies (Dumbbell)'],
+    'Back': ['Pull-Ups', 'Chin Ups', 'Lat Pull Downs', 'Cable Rows', 'Deadlift'],
+    'Arms': ['Tricep Push-Downs', 'Overhead Tricep Extensions', 'Bicep Curls', 'Hammer Curls'],
+    'Legs': ['Leg Press', 'Barbell Squat', 'Calf Raises'],
+    'Cardio': ['Running', 'Cycling', 'Rowing'],
+    'Core': ['Planks', 'Crunches']
+};
+
+function getExerciseData() {
+    const exerciseData = [];
+
+    // Chest Exercises
+    exercises['Chest'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Shoulders Exercises
+    exercises['Shoulders'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Back Exercises
+    exercises['Back'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Arms Exercises
+    exercises['Arms'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Legs Exercises
+    exercises['Legs'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Cardio Exercises
+    exercises['Cardio'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    // Core Exercises
+    exercises['Core'].forEach(exercise => {
+        exerciseData.push({
+            name: exercise,
+            sets: 0,
+            reps: 0,
+            weight: 0,
+            duration: 0,
+            notes: ''
+        });
+    });
+
+    return exerciseData;
+}
+
+
+
 function closeExerciseModal() {
     document.getElementById('exercise-modal').style.display = 'none';
 }
 
-function selectExercise(exercise) {
-    document.getElementById('select-exercise').textContent = exercise;
+function selectExercise(exercise, category) {
+    const selectExerciseButton = document.getElementById('select-exercise');
+    selectExerciseButton.textContent = exercise;
+    selectExerciseButton.style.backgroundColor = getCategoryColor(category); // Set the background color
     closeExerciseModal();
 }
+
 
 function showSuccessPopup() {
     const popup = document.getElementById('success-popup');
@@ -256,6 +361,63 @@ function showPage(page) {
     pages.forEach(p => p.classList.remove('active'));
     document.getElementById(page).classList.add('active');
 }
+
+
+function createOrUpdateChart(exercise) {
+    const canvasId = `chart-${exercise}`; // Assuming you have a canvas for each exercise
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    
+    // If chart exists, update the data; if not, create a new one
+    if (charts[exercise]) {
+        // Update existing chart data
+        charts[exercise].data.datasets[0].data = getExerciseData(exercise); // Get updated data
+        charts[exercise].update(); // Update the chart
+    } else {
+        // Create a new chart
+        const chartData = getExerciseData(exercise); // Function to get initial data for the exercise
+        charts[exercise] = new Chart(ctx, {
+            type: 'line', // or 'bar' based on your preference
+            data: {
+                labels: chartData.labels, // Assuming you have labels for the x-axis
+                datasets: [{
+                    label: exercise,
+                    data: chartData.data, // Initial data for the chart
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+}
+
+
+function addLog(exercise, logData) {
+    // Code to add the log data to your database or data structure
+    
+    createOrUpdateChart(exercise); // Call to update or create the chart after adding log
+}
+
+
+function deleteLog(exercise, logId) {
+    // Code to delete the log from your database or data structure
+    
+    // After deletion, update the chart
+    createOrUpdateChart(exercise); // Call to refresh the chart after deletion
+}
+
+
+
+
+
 
 // Initialize default view
 showPage('home');

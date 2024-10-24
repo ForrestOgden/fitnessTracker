@@ -112,41 +112,67 @@ function updateBodyWeightChart() {
 }
 
 function updateLiftChartsSection(exercise) {
-    // Create a canvas for the new exercise chart
-    const canvas = document.createElement('canvas');
-    canvas.id = `${exercise}-chart`;
-    canvas.width = 400;
-    canvas.height = 200;
-    
-    // Append the new chart to the exercise-charts section
-    const exerciseChartsDiv = document.getElementById('exercise-charts');
-    exerciseChartsDiv.appendChild(canvas);
+    const data = getExerciseData(exercise); // Fetch the current exercise data
 
-    // Get data and create the chart
-    const data = getExerciseData(exercise); // Replace this with your function to get exercise data
-    const ctx = canvas.getContext('2d');
+    // Check if the chart already exists
+    if (charts[exercise]) {
+        // Update existing chart with new data
+        charts[exercise].data.labels = data.labels; // Update labels (dates)
+        charts[exercise].data.datasets[0].data = data.values; // Update weight data
+        charts[exercise].update(); // Refresh the chart
+    } else {
+        // Create a new canvas for the exercise chart
+        const canvas = document.createElement('canvas');
+        canvas.id = `${exercise}-chart`;
+        canvas.width = 400;
+        canvas.height = 200;
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: exercise,
-                data: data.values,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Append the new chart to the exercise-charts section
+        const exerciseChartsDiv = document.getElementById('exercise-charts');
+        exerciseChartsDiv.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+
+        // Initialize the chart
+        charts[exercise] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: exercise,
+                    data: data.values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 }
+
+function deleteLog(exercise, logId) {
+    // Code to delete the log from your database or data structure
+    // Assuming logId is the index or unique identifier for the log to delete
+
+    // Update the exercise data
+    liftData[exercise].splice(logId, 1); // Remove the entry
+    localStorage.setItem('liftData', JSON.stringify(liftData)); // Update localStorage
+
+    // Refresh the chart with updated data
+    updateLiftChartsSection(exercise); // Call to refresh the chart after deletion
+}
+
+
+
+
+
 
 function updateProgressList() {
     const workoutList = document.getElementById('workout-list');
@@ -244,94 +270,12 @@ const exercises = {
     'Core': ['Planks', 'Crunches']
 };
 
-function getExerciseData() {
-    const exerciseData = [];
+function getExerciseData(exercise) {
+    const exerciseLogs = liftData[exercise] || [];
+    const labels = exerciseLogs.map(log => log.date);
+    const values = exerciseLogs.map(log => log.weight); // Assuming you want to plot weight
 
-    // Chest Exercises
-    exercises['Chest'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Shoulders Exercises
-    exercises['Shoulders'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Back Exercises
-    exercises['Back'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Arms Exercises
-    exercises['Arms'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Legs Exercises
-    exercises['Legs'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Cardio Exercises
-    exercises['Cardio'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    // Core Exercises
-    exercises['Core'].forEach(exercise => {
-        exerciseData.push({
-            name: exercise,
-            sets: 0,
-            reps: 0,
-            weight: 0,
-            duration: 0,
-            notes: ''
-        });
-    });
-
-    return exerciseData;
+    return { labels, values };
 }
 
 
@@ -406,13 +350,6 @@ function addLog(exercise, logData) {
     createOrUpdateChart(exercise); // Call to update or create the chart after adding log
 }
 
-
-function deleteLog(exercise, logId) {
-    // Code to delete the log from your database or data structure
-    
-    // After deletion, update the chart
-    createOrUpdateChart(exercise); // Call to refresh the chart after deletion
-}
 
 
 

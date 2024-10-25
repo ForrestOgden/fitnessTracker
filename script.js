@@ -1,3 +1,17 @@
+// Check if service workers are supported
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+                console.error('Service Worker registration failed:', error);
+            });
+    });
+}
+
+
 let bodyWeightData = JSON.parse(localStorage.getItem('bodyWeightData')) || [];
 
 let liftData = JSON.parse(localStorage.getItem('liftData')) || {}; // Load existing liftData or create an empty object
@@ -58,17 +72,27 @@ function loadChartConfig(exercise) {
 
 
 
-function updateLiftChartsSection(exercise) {
-    const data = getExerciseData(exercise); // Fetch the current exercise data
+document.addEventListener('DOMContentLoaded', () => {
+    updateAllLiftCharts(); // Call the function when DOM is fully loaded
+});
 
-    // Check if the chart already exists
+function updateLiftChartsSection(exercise) {
+    // Try to get the data for this exercise
+    const data = getExerciseData(exercise);
+
+    if (!data || data.labels.length === 0 || data.values.length === 0) {
+        console.log(`No data for ${exercise}. Will retry shortly.`);
+        setTimeout(() => updateLiftChartsSection(exercise), 100); // Retry in 100ms if data is not ready
+        return;
+    }
+
+    // Check if the chart for the exercise already exists
     if (charts[exercise]) {
-        // Update existing chart with new data
-        charts[exercise].data.labels = data.labels; // Update labels (dates)
-        charts[exercise].data.datasets[0].data = data.values; // Update weight data
-        charts[exercise].update(); // Refresh the chart
+        charts[exercise].data.labels = data.labels;
+        charts[exercise].data.datasets[0].data = data.values;
+        charts[exercise].update();
     } else {
-        // Create a new canvas for the exercise chart
+        // Create a new canvas if the chart doesn't exist
         const canvas = document.createElement('canvas');
         canvas.id = `${exercise}-chart`;
         canvas.width = 400;
@@ -78,12 +102,7 @@ function updateLiftChartsSection(exercise) {
         exerciseChartsDiv.appendChild(canvas);
 
         const ctx = canvas.getContext('2d');
-        let color = loadChartConfig(exercise); // Try to load the stored color
-
-        // If no color is found, get a new random one
-        if (!color) {
-            color = getRandomCyberpunkColor(exercise);
-        }
+        const color = getRandomCyberpunkColor(exercise);
 
         charts[exercise] = new Chart(ctx, {
             type: 'line',
@@ -106,11 +125,15 @@ function updateLiftChartsSection(exercise) {
                 }
             }
         });
-
-        // Save the chart configuration to localStorage
-        saveChartConfig(exercise, color);
     }
 }
+
+function updateAllLiftCharts() {
+    Object.keys(liftData).forEach(exercise => {
+        updateLiftChartsSection(exercise);
+    });
+}
+
 
 
 

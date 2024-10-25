@@ -2,7 +2,7 @@ const CACHE_NAME = 'fitness-tracker-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/style.css', // Path to your CSS file
+    '/styles.css', // Path to your CSS file
     '/script.js', // Path to your main JavaScript file
     '/muscles.png', // Your app icon
     '/refresh.jpg', // Refresh button image
